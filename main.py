@@ -23,7 +23,7 @@ som_colisao.set_volume(0.8)
 tela_largura = 1000
 tela_altura = 700
 tela = pygame.display.set_mode((tela_largura, tela_altura))
-pygame.display.set_caption("Jogo do cavalheiro")
+pygame.display.set_caption("The last knight game")
 
 imagemFundo = pygame.image.load("recursos/ImagemFundo.png.gif").convert()
 imagemFundo = pygame.transform.scale(imagemFundo, (tela_largura, tela_altura))
@@ -245,7 +245,7 @@ while digitando:
     overlay.fill((0, 0, 0))
     tela.blit(overlay, (100, 100))
 
-    titulo1 = fonte_titulo.render("Jogo do cavalheiro", True, (128, 128, 128))
+    titulo1 = fonte_titulo.render("The last knight game", True, (128, 128, 128))
     titulo2 = fonte_titulo.render("Digite seu nome: ", True, ((255, 255, 255)))
     if len(nome) > 20:
         nome = nome[:20]  # Limita o nome a 20 caracteres
