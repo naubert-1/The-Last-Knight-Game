@@ -477,7 +477,7 @@ tela.blit(texto_distancia, (10, 40))
 msg_pause = pygame.font.SysFont('comicsans', 22).render("• Press Enter to Pause Game.", True, (0, 0, 0))
 tela.blit(msg_pause, (texto_pontuacao.get_width() + 20, 14))
 
-#salvar log da partida
+#salvar log da partida no histórico
 Obstaculo.salvar_log_partida(nome, pontuacao)
 pygame.display.update()
 
