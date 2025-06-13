@@ -269,7 +269,7 @@ while digitando:
             else:
                 nome += evento.unicode
 
-# Boas-vindas
+# Painel de Boas-vindas
 fonte_boasvindas = pygame.font.SysFont('arialblack', 60)
 mensagem = fonte_boasvindas.render(f"Bem-vindo, {nome}!", True, (255, 255, 255))
 overlay = pygame.Surface((800, 120))
