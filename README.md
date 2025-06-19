@@ -2,7 +2,7 @@
 The Last Knight Game
 
 
-Nome do desenvolvedor: Naubert P. Migliavacca  
+Nome do desenvolvedor: Naubert Piva Migliavacca  
 RA: 1138130
 
 ## 🎮 Descrição do Jogo
