@@ -3,6 +3,7 @@ import random
 import datetime
 import math
 import speech_recognition as sr
+import pyttsx3
 from PIL import Image
 from recursos.definicao import calcular_distancia
 
@@ -33,6 +34,10 @@ pontuacao = 0
 fonte_titulo = pygame.font.SysFont('arial', 50)
 fonte_input = pygame.font.SysFont('comicsans', 40)
 fonte_pontuacao = pygame.font.SysFont("arial", 36)
+
+engine = pyttsx3.init()
+engine.setProperty('rate', 150)
+engine.setProperty('volume', 0.9)
 
 # Função para extrair frames do gif
 def extrair_frames(gif_path):
@@ -172,6 +177,8 @@ while digitando:
         if evento.type == pygame.KEYDOWN:
             if evento.key == pygame.K_RETURN and nome:
                 digitando = False
+                engine.say(f"Bem-vindo ao jogo, {nome}!")
+                engine.runAndWait()
             elif evento.key == pygame.K_SPACE:
                 nome = nome[:-1]
             else:
@@ -202,7 +209,8 @@ while esperando:
     explicacoes = [
         "Você deve pular (tecla ESPAÇO)",
         "para evitar obstáculos como tanques e aviões.",
-        "Diga 'iniciar' ou clique no botão para começar."
+        "Diga 'iniciar' ou clique no botão para começar.",
+        "Bombas aparecerão aleatoriamente, mas ela serve apenas para efeito, ignore-as.",
     ]
     for i, linha in enumerate(explicacoes):
         texto = fonte_explicacao.render(linha, True, (200, 200, 200))
