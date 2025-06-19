@@ -50,23 +50,24 @@ def extrair_frames(gif_path):
         frames.append(pygame_image)
     return frames
 
-def salvar_log(pontuacao):
+def salvar_log(pontuacao, nome):
     agora = datetime.datetime.now()
     data = agora.strftime("%Y-%m-%d")
     hora = agora.strftime("%H:%M:%S")
     with open("log_dat.txt", "a") as arquivo:
-        arquivo.write(f"Pontuação: {pontuacao} | Data: {data} | Hora: {hora}\n")
+        arquivo.write(f"Pontuação: {pontuacao} | Jogador: {nome} | Data: {data} | Hora: {hora}\n")
 
-def tela_fim_jogo(tela, fonte, pontuacao, salvar_log_fn):
-    salvar_log_fn(pontuacao)
+def tela_fim_jogo(tela, fonte, pontuacao, salvar_log_fn, nome):
+    salvar_log_fn(pontuacao, nome)
 
-    # Lê os últimos 5 registros
+    # Lê os registros do log
     try:
         with open("log_dat.txt", "r") as arquivo:
             linhas = arquivo.readlines()
-            ultimos_logs = linhas[-5:]
     except FileNotFoundError:
-        ultimos_logs = []
+        linhas = []
+
+    ultimos_logs = linhas[-5:] if linhas else []
 
     # Encontra o/a recordista
     recorde = 0
@@ -76,9 +77,10 @@ def tela_fim_jogo(tela, fonte, pontuacao, salvar_log_fn):
             try:
                 partes = linha.split("|")
                 pontos = int(partes[0].split(":")[1].strip())
+                jogador = partes[1].split(":")[1].strip()
                 if pontos > recorde:
                     recorde = pontos
-                    recordista = partes[-1].strip()  # Usa hora como "identificação"
+                    recordista = jogador
             except:
                 continue
 
@@ -408,8 +410,7 @@ while rodando:
     distancia_metros = int(tempo_decorrido / 1000 * velocidade_mps)
     texto_distancia = fonte.render(f"Distância: {distancia_metros} m", True, (255, 255, 255))
     tela.blit(texto_distancia, (10, 40))
-    msg_pause = pygame.font.SysFont('comicsans', 22).render("• Press Enter to Pause Game.", True, (0, 0, 0))
-    tela.blit(msg_pause, (texto_pontuacao.get_width() + 20, 14))
+
 
     # Eventos
     for evento in pygame.event.get():
@@ -420,8 +421,7 @@ while rodando:
             # Código para pular
                 pulo = True
                 som_pulo.play()
-            elif evento.key == pygame.K_RETURN:
-                pausado = not pausado
+            
 
 
         
@@ -430,7 +430,7 @@ while rodando:
 
 # Game Over
 while True:
-    tela_fim_jogo(tela, fonte_pontuacao, pontuacao, salvar_log)
+    tela_fim_jogo(tela, fonte_pontuacao, pontuacao, salvar_log, nome)
     tela.blit(fundoGameOver, (0, 0))
     tela.blit(fonte_titulo.render("The Last Knight Game", True, (128, 128, 128)), (250, 100))
     tela.blit(fonte_titulo.render("Você perdeu!", True, (255, 0, 0)), (400, 200))
@@ -449,7 +449,6 @@ while True:
     obstaculos = []
     pontuacao = 0
     rodando = True
-    pausado = False
     inicio_tempo = pygame.time.get_ticks()
     ultimo_obstaculo = pygame.time.get_ticks()
 
