@@ -68,7 +68,7 @@ def tela_fim_jogo(tela, fonte, pontuacao, salvar_log_fn):
     except FileNotFoundError:
         ultimos_logs = []
 
-    # Encontra o recordista
+    # Encontra o/a recordista
     recorde = 0
     recordista = "N/A"
     for linha in linhas:
