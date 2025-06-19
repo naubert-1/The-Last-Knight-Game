@@ -2,6 +2,7 @@ import pygame
 import random
 import datetime
 import math
+import speech_recognition as sr
 from PIL import Image
 from recursos.definicao import calcular_distancia
 
@@ -49,6 +50,22 @@ def extrair_frames(gif_path):
         pygame_image = pygame.image.fromstring(dados, tamanho, modo).convert_alpha()
         frames.append(pygame_image)
     return frames
+
+def ouvir_comando():
+    reconhecedor = sr.Recognizer()
+    with sr.Microphone() as source:
+        print("Diga 'iniciar' para começar o jogo...")
+        audio = reconhecedor.listen(source, phrase_time_limit=3)
+        try:
+            comando = reconhecedor.recognize_google(audio, language="pt-BR")
+            print(f"Você disse: {comando}")
+            return comando.lower()
+        except sr.UnknownValueError:
+            print("Não entendi o que você disse.")
+            return ""
+        except sr.RequestError:
+            print("Erro ao acessar o serviço de reconhecimento.")
+            return ""
 
 def salvar_log(pontuacao, nome):
     agora = datetime.datetime.now()
@@ -170,38 +187,41 @@ fonte_botao = pygame.font.SysFont('arialblack', 36)
 fonte_boasvindas = pygame.font.SysFont('arial', 40)
 
 esperando = True
+ultimo_voz = pygame.time.get_ticks()
+
 while esperando:
     tela.blit(fundo, (0, 0))
-    
-    # Overlay
     overlay = pygame.Surface((900, 500))
     overlay.set_alpha(200)
     overlay.fill((0, 0, 0))
     tela.blit(overlay, (50, 100))
-    
-    # Mensagem principal
+
     titulo = fonte_boasvindas.render(f"Bem-vindo, {nome}!", True, (255, 255, 255))
     tela.blit(titulo, (LARGURA // 2 - titulo.get_width() // 2, 120))
-    
-    # Instruções
+
     explicacoes = [
         "Você deve pular (tecla ESPAÇO)",
         "para evitar obstáculos como tanques e aviões.",
-        "Quanto mais tempo sobreviver, maior sua pontuação!",
-        "As bombas apenas deixam o jogo mais interessante, podendo ser ignoradas.",
+        "Diga 'iniciar' ou clique no botão para começar."
     ]
     for i, linha in enumerate(explicacoes):
         texto = fonte_explicacao.render(linha, True, (200, 200, 200))
         tela.blit(texto, (LARGURA // 2 - texto.get_width() // 2, 200 + i * 40))
-    
-    # Botão
+
     pygame.draw.rect(tela, (0, 128, 0), (botao_x, botao_y, botao_largura, botao_altura), border_radius=10)
     texto_botao = fonte_botao.render("INICIAR", True, (255, 255, 255))
     tela.blit(texto_botao, (botao_x + botao_largura // 2 - texto_botao.get_width() // 2,
                             botao_y + botao_altura // 2 - texto_botao.get_height() // 2))
-    
+
     pygame.display.update()
-    
+
+    # A cada 5 segundos tenta ouvir por voz
+    if pygame.time.get_ticks() - ultimo_voz > 5000:
+        comando = ouvir_comando()
+        if "iniciar" in comando:
+            esperando = False
+        ultimo_voz = pygame.time.get_ticks()
+
     for evento in pygame.event.get():
         if evento.type == pygame.QUIT:
             pygame.quit()
