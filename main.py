@@ -428,7 +428,7 @@ while rodando:
 
     pygame.display.update()
 
-# Game Over
+# Game Over, fim de jogo
 while True:
     tela_fim_jogo(tela, fonte_pontuacao, pontuacao, salvar_log, nome)
     tela.blit(fundoGameOver, (0, 0))
